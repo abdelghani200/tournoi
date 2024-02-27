@@ -88,6 +88,16 @@ public class ButServiceImpl implements ButService {
         butRepository.save(butToUpdate);
     }
 
+    @Override
+    public List<ButDtoRes> searchByAllAttributes(String playerName, String equipeName, String tournoiName) {
+        List<Gool> butList = butRepository.findAll();
 
+        return butList.stream()
+                .filter(but -> playerName == null || but.getPlayer().getNomUser().equals(playerName))
+                .filter(but -> equipeName == null || but.getEquipe().getNomEquipe().equals(equipeName))
+                .filter(but -> tournoiName == null || but.getMatch().getTournoi().getNameTournoi().equals(tournoiName))
+                .map(but -> modelMapper.map(but, ButDtoRes.class))
+                .collect(Collectors.toList());
+    }
 
 }
