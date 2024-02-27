@@ -10,6 +10,5 @@ public interface EquipeService {
     List<EquipeDtoRes> getAll();
     EquipeDtoRes findById(Long id);
 
-
 }
 
