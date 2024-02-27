@@ -12,5 +12,6 @@ public interface UserService {
     PlayerDto createPlayer(PlayerDto player);
 
     List<PlayerDtoRes> getAllPlayers();
+    List<AdminDto> getAllAdmins();
 
 }

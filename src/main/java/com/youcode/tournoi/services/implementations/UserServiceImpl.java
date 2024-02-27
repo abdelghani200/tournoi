@@ -54,6 +54,14 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<AdminDto> getAllAdmins() {
+        List<Admin> adminList = adminRepository.findAll();
+        return adminList.stream()
+                .map(admin -> modelMapper.map(admin, AdminDto.class))
+                .collect(Collectors.toList());
+    }
+
 
 
 }
