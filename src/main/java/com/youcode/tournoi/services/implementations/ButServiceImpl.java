@@ -57,6 +57,15 @@ public class ButServiceImpl implements ButService {
         return modelMapper.map(but, ButDtoReq.class);
     }
 
+    @Override
+    public List<ButDtoRes> getAll() {
+        List<Gool> butList = butRepository.findAll();
+        return butList.stream()
+                .map(equipe -> modelMapper.map(equipe, ButDtoRes.class))
+                .collect(Collectors.toList());
+    }
+
+
 
 
 }
