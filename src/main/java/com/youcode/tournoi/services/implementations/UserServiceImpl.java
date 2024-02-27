@@ -46,5 +46,14 @@ public class UserServiceImpl implements UserService {
         return modelMapper.map(savedplayer, PlayerDto.class);
     }
 
+    @Override
+    public List<PlayerDtoRes> getAllPlayers() {
+        List<Player> playerList = playerRepository.findAll();
+        return playerList.stream()
+                .map(player -> modelMapper.map(player, PlayerDtoRes.class))
+                .collect(Collectors.toList());
+    }
+
+
 
 }
