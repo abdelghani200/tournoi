@@ -62,6 +62,13 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public PlayerDtoRes findById(Long id) {
+        Player player = playerRepository.findById(id)
+                .orElseThrow(()->new PlayerNotFoundException("The player with ID " + id + " does not exist"));
+        return modelMapper.map(player, PlayerDtoRes.class);
+    }
+
 
 
 }

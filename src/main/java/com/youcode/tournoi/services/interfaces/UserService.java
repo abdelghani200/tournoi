@@ -14,4 +14,7 @@ public interface UserService {
     List<PlayerDtoRes> getAllPlayers();
     List<AdminDto> getAllAdmins();
 
+    PlayerDtoRes findById(Long id);
+
+
 }
