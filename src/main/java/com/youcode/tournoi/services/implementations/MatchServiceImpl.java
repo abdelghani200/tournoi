@@ -34,6 +34,14 @@ public class MatchServiceImpl implements MatchService {
         return modelMapper.map(savedMatch, MatchDto.class);
     }
 
+    @Override
+    public List<MatchDtoRes> getAll() {
+        List<Match> matchList = matchRepository.findAll();
+        return matchList.stream()
+                .map(match -> modelMapper.map(match, MatchDtoRes.class))
+                .collect(Collectors.toList());
+    }
+
 
 
 }

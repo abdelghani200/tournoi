@@ -7,5 +7,6 @@ import java.util.List;
 
 public interface MatchService {
     MatchDto save(MatchDto matchDto);
+    List<MatchDtoRes> getAll();
 
 }
