@@ -45,6 +45,29 @@ public class TournoiServiceImpl implements TournoiService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public EquipeToTournoi inscrireEquipeDansTournoi(EquipeToTournoi equipeToTournoi) {
+        Tournoi tournoi = tournoiRepository.findById(equipeToTournoi.getTournoiId()).orElse(null);
+        Equipe equipe = equipeRepository.findById(equipeToTournoi.getEquipeId()).orElse(null);
+
+        if (tournoi != null && equipe != null) {
+            List<Equipe> equipes = tournoi.getEquipes();
+            equipes.add(equipe);
+            tournoi.setEquipes(equipes);
+
+            tournoiRepository.save(tournoi);
+
+            EquipeToTournoi savedEquipeToTournoi = new EquipeToTournoi();
+            savedEquipeToTournoi.setTournoiId(tournoi.getId());
+            savedEquipeToTournoi.setEquipeId(equipe.getIdEquipe());
+            System.out.println("saved" + savedEquipeToTournoi);
+            return savedEquipeToTournoi;
+
+        } else {
+            throw new TournoiNotFoundException("Tournoi ou équipe non trouvé avec l'ID spécifié.");
+        }
+    }
+
 
 
 }

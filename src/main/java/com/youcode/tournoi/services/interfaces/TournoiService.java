@@ -11,4 +11,5 @@ import java.util.List;
 public interface TournoiService {
     TournoiDto save(TournoiDto tournoiDto);
     List<TournoiDtoRes> getAll();
+    EquipeToTournoi inscrireEquipeDansTournoi(EquipeToTournoi equipeToTournoi);
 }
