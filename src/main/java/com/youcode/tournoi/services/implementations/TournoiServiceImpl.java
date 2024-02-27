@@ -37,6 +37,14 @@ public class TournoiServiceImpl implements TournoiService {
         return modelMapper.map(savedTournoi, TournoiDto.class);
     }
 
+    @Override
+    public List<TournoiDtoRes> getAll() {
+        List<Tournoi> tournoiList = tournoiRepository.findAll();
+        return tournoiList.stream()
+                .map(tournoi -> modelMapper.map(tournoi, TournoiDtoRes.class))
+                .collect(Collectors.toList());
+    }
+
 
 
 }
