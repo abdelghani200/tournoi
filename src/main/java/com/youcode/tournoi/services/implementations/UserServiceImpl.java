@@ -69,6 +69,13 @@ public class UserServiceImpl implements UserService {
         return modelMapper.map(player, PlayerDtoRes.class);
     }
 
-
+    @Override
+    public PlayerDtoRes searchPlayers(String searchTerm) {
+        List<Player> searchResults = playerRepository.searchPlayers(searchTerm);
+        if (searchResults.isEmpty()) {
+            throw new PlayerNotFoundException("No players found matching the search term: " + searchTerm);
+        }
+        return modelMapper.map(searchResults.get(0), PlayerDtoRes.class);
+    }
 
 }

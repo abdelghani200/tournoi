@@ -16,5 +16,5 @@ public interface UserService {
 
     PlayerDtoRes findById(Long id);
 
-
+    PlayerDtoRes searchPlayers(String searchTerm);
 }
