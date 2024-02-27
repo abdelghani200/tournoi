@@ -43,5 +43,10 @@ public class EquipeServiceImpl implements EquipeService {
 
     }
 
-
+    @Override
+    public EquipeDtoRes findById(Long id) {
+        Equipe equipe = equipeRepository.findById(id)
+                .orElseThrow(()->new EquipeNotFoundException("The equipe with ID " + id + " does not exist"));
+        return modelMapper.map(equipe, EquipeDtoRes.class);
+    }
 }

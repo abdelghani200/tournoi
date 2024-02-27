@@ -8,6 +8,7 @@ import java.util.List;
 public interface EquipeService {
     EquipeDtoRes save(EquipeDtoRes equipeDtoRes);
     List<EquipeDtoRes> getAll();
+    EquipeDtoRes findById(Long id);
 
 
 }
