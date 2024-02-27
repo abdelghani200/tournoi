@@ -34,6 +34,14 @@ public class EquipeServiceImpl implements EquipeService {
         return modelMapper.map(savedEquipe, EquipeDtoRes.class);
     }
 
+    @Override
+    public List<EquipeDtoRes> getAll() {
+        List<Equipe> equipeList = equipeRepository.findAll();
+        return equipeList.stream()
+                .map(equipe -> modelMapper.map(equipe, EquipeDtoRes.class))
+                .collect(Collectors.toList());
+
+    }
 
 
 }
