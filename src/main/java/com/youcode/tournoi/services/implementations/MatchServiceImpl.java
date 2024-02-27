@@ -60,5 +60,4 @@ public class MatchServiceImpl implements MatchService {
                 })
                 .collect(Collectors.toList());
     }
-
 }
