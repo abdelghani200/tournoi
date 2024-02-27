@@ -42,6 +42,13 @@ public class MatchServiceImpl implements MatchService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public MatchDtoRes findById(Long id) {
+        Match match = matchRepository.findById(id)
+                .orElseThrow(()->new EquipeNotFoundException("The match with ID " + id + " does not exist"));
+        return modelMapper.map(match, MatchDtoRes.class);
+    }
+
 
 
 }
