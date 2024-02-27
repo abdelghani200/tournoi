@@ -49,6 +49,16 @@ public class MatchServiceImpl implements MatchService {
         return modelMapper.map(match, MatchDtoRes.class);
     }
 
-
+    @Override
+    public List<MatchDtoRes> getMatchesByTournoiId(Long tournoiId) {
+        List<Long> matchIds = matchRepository.findByTournoiId(tournoiId);
+        return matchIds.stream()
+                .map(matchId -> {
+                    MatchDtoRes matchDtoRes = new MatchDtoRes();
+                    matchDtoRes.setIdMatch(matchId);
+                    return matchDtoRes;
+                })
+                .collect(Collectors.toList());
+    }
 
 }

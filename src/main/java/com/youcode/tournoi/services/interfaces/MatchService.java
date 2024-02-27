@@ -9,5 +9,5 @@ public interface MatchService {
     MatchDto save(MatchDto matchDto);
     List<MatchDtoRes> getAll();
     MatchDtoRes findById(Long id);
-
+    List<MatchDtoRes> getMatchesByTournoiId(Long tournoiId);
 }
