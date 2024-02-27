@@ -8,5 +8,7 @@ import java.util.List;
 public interface ButService {
     ButDtoReq saveBut(ButDtoReq butDtoReq);
     List<ButDtoRes> getAll();
+    int getGoalsByPlayerId(Long playerId);
+    void incrementNumberOfGoals(Long idBut, Integer newNumberOfGoals);
 
 }

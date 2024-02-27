@@ -65,6 +65,19 @@ public class ButServiceImpl implements ButService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public int getGoalsByPlayerId(Long playerId) {
+        return butRepository.countByPlayerId(playerId);
+    }
+
+    @Override
+    public void incrementNumberOfGoals(Long idBut, Integer newNumberOfGoals) {
+        Gool butToUpdate = butRepository.findById(idBut).orElseThrow(() -> new GoolNotFoundException("Gool not found with id: " + idBut));
+        Integer currentNumberOfGoals = butToUpdate.getNumberOfGoal();
+        Integer updatedNumberOfGoals = currentNumberOfGoals + newNumberOfGoals;
+        butToUpdate.setNumberOfGoal(updatedNumberOfGoals);
+        butRepository.save(butToUpdate);
+    }
 
 
 
