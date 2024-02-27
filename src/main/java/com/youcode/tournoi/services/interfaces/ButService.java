@@ -10,5 +10,7 @@ public interface ButService {
     List<ButDtoRes> getAll();
     int getGoalsByPlayerId(Long playerId);
     void incrementNumberOfGoals(Long idBut, Integer newNumberOfGoals);
+    void decrementNumberOfGoals(Long idBut, Integer newNumberOfGoals);
+
 
 }

@@ -79,6 +79,15 @@ public class ButServiceImpl implements ButService {
         butRepository.save(butToUpdate);
     }
 
+    @Override
+    public void decrementNumberOfGoals(Long idBut, Integer newNumberOfGoals) {
+        Gool butToUpdate = butRepository.findById(idBut).orElseThrow(() -> new GoolNotFoundException("Gool not found with id: " + idBut));
+        int currentNumberOfGoals = butToUpdate.getNumberOfGoal();
+        int updatedNumberOfGoals = currentNumberOfGoals - newNumberOfGoals;
+        butToUpdate.setNumberOfGoal(updatedNumberOfGoals);
+        butRepository.save(butToUpdate);
+    }
+
 
 
 }
