@@ -1,0 +1,44 @@
+package com.youcode.tournoi.services.implementations;
+
+import com.youcode.tournoi.dtos.player.PlayerDtoRes;
+import com.youcode.tournoi.dtos.user.AdminDto;
+import com.youcode.tournoi.dtos.player.PlayerDto;
+import com.youcode.tournoi.entities.Admin;
+import com.youcode.tournoi.entities.Player;
+import com.youcode.tournoi.exceptions.PlayerNotFoundException;
+import com.youcode.tournoi.persistence.AdminRepository;
+import com.youcode.tournoi.persistence.PlayerRepository;
+import com.youcode.tournoi.services.interfaces.UserService;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
+public class UserServiceImpl implements UserService {
+
+    private final AdminRepository adminRepository;
+    private final PlayerRepository playerRepository;
+    private final ModelMapper modelMapper;
+
+    @Autowired
+    public UserServiceImpl(AdminRepository adminRepository, PlayerRepository playerRepository, ModelMapper modelMapper){
+        this.adminRepository = adminRepository;
+        this.playerRepository = playerRepository;
+        this.modelMapper = modelMapper;
+    }
+
+
+    @Override
+    public AdminDto createAdmin(AdminDto adminDto) {
+        Admin adminEntity = modelMapper.map(adminDto, Admin.class);
+        Admin savedAdmin = adminRepository.save(adminEntity);
+        return modelMapper.map(savedAdmin, AdminDto.class);
+    }
+
+
+
+}
