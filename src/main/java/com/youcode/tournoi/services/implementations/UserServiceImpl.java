@@ -39,6 +39,12 @@ public class UserServiceImpl implements UserService {
         return modelMapper.map(savedAdmin, AdminDto.class);
     }
 
+    @Override
+    public PlayerDto createPlayer(PlayerDto playerDto) {
+        Player playerEntity = modelMapper.map(playerDto, Player.class);
+        Player savedplayer = playerRepository.save(playerEntity);
+        return modelMapper.map(savedplayer, PlayerDto.class);
+    }
 
 
 }

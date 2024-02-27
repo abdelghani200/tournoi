@@ -9,5 +9,7 @@ import java.util.List;
 
 public interface UserService {
     AdminDto createAdmin(AdminDto admin);
+    PlayerDto createPlayer(PlayerDto player);
+
 
 }
