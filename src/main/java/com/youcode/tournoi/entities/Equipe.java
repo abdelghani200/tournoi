@@ -24,6 +24,6 @@ public class Equipe {
     @ManyToMany(mappedBy = "equipes")
     private List<Tournoi> tournois;
 
-    @OneToMany(mappedBy = "equipe")
-    private List<Player> players;
+//    @OneToMany(mappedBy = "equipe")
+//    private List<Player> players;
 }
