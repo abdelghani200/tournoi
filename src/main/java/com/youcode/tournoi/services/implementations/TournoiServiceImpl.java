@@ -1,13 +1,16 @@
 package com.youcode.tournoi.services.implementations;
 
+import com.youcode.tournoi.dtos.equipe.EquipeWithPlayerDtoRes;
 import com.youcode.tournoi.dtos.player.EquipeToTournoi;
 import com.youcode.tournoi.dtos.tournoi.TournoiDto;
 import com.youcode.tournoi.dtos.tournoi.TournoiDtoRes;
 import com.youcode.tournoi.entities.Equipe;
+import com.youcode.tournoi.entities.EquipeWithPlayer;
 import com.youcode.tournoi.entities.Tournoi;
 import com.youcode.tournoi.exceptions.TournoiNotFoundException;
 import com.youcode.tournoi.persistence.EquipeRepository;
 import com.youcode.tournoi.persistence.TournoiRepository;
+import com.youcode.tournoi.services.interfaces.EquipeWithPlayerService;
 import com.youcode.tournoi.services.interfaces.TournoiService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +25,14 @@ public class TournoiServiceImpl implements TournoiService {
     private final TournoiRepository tournoiRepository;
     private final ModelMapper modelMapper;
     private final EquipeRepository equipeRepository;
+    private final EquipeWithPlayerService equipeWithPlayerService;
 
     @Autowired
-    public TournoiServiceImpl(TournoiRepository tournoiRepository, ModelMapper modelMapper, EquipeRepository equipeRepository) {
+    public TournoiServiceImpl(TournoiRepository tournoiRepository, ModelMapper modelMapper, EquipeRepository equipeRepository, EquipeWithPlayerService equipeWithPlayerService) {
         this.tournoiRepository = tournoiRepository;
         this.modelMapper = modelMapper;
         this.equipeRepository = equipeRepository;
+        this.equipeWithPlayerService = equipeWithPlayerService;
     }
 
     @Override
@@ -51,6 +56,9 @@ public class TournoiServiceImpl implements TournoiService {
         Equipe equipe = equipeRepository.findById(equipeToTournoi.getEquipeId()).orElse(null);
 
         if (tournoi != null && equipe != null) {
+
+
+
             List<Equipe> equipes = tournoi.getEquipes();
             equipes.add(equipe);
             tournoi.setEquipes(equipes);
@@ -69,5 +77,13 @@ public class TournoiServiceImpl implements TournoiService {
     }
 
 
+    @Override
+    public void delete(Long id) {
 
+    }
+
+    @Override
+    public TournoiDtoRes update(Long id, TournoiDtoRes dtoRes) {
+        return null;
+    }
 }

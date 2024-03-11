@@ -33,6 +33,9 @@ public class Tournoi {
     @OneToMany(mappedBy = "tournoi", cascade = CascadeType.ALL)
     private List<Match> matches;
 
+    @OneToMany(mappedBy = "tournoi", cascade = CascadeType.ALL)
+    private List<EquipeWithPlayer> equipeWithPlayers;
+
     @ManyToMany
     @JoinTable(
             name = "players_fifa",

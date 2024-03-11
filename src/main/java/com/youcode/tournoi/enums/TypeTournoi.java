@@ -1,7 +1,7 @@
 package com.youcode.tournoi.enums;
 
 public enum TypeTournoi {
-    TootBall,
+    FootBall,
     Fifa,
     BabyFoot,
     BasketBall,
