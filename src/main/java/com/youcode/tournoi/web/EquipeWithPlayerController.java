@@ -1,13 +1,14 @@
 package com.youcode.tournoi.web;
 
+import com.youcode.tournoi.dtos.equipe.EquipeWithPlayerDtoReq;
 import com.youcode.tournoi.dtos.equipe.EquipeWithPlayerDtoRes;
+import com.youcode.tournoi.dtos.player.PlayerDtoRes;
 import com.youcode.tournoi.services.interfaces.EquipeWithPlayerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/equipeWithPlayer")
@@ -24,5 +25,16 @@ public class EquipeWithPlayerController {
         EquipeWithPlayerDtoRes equipeWithPlayer = withPlayerService.savePlayerToEquipe(withPlayer);
         return  new ResponseEntity<>(equipeWithPlayer, HttpStatus.CREATED);
     }
+
+    @GetMapping("/{equipeId}/players")
+    public List<EquipeWithPlayerDtoReq> getPlayersOfEquipe(@PathVariable Long equipeId) {
+        return withPlayerService.getPlayersByEquipe(equipeId);
+    }
+
+    @GetMapping("/playersOfTwoEquipes/{equipeId1}/{equipeId2}")
+    public List<EquipeWithPlayerDtoReq> getPlayersOfTwoEquipes(@PathVariable Long equipeId1, @PathVariable Long equipeId2) {
+        return withPlayerService.getPlayersByEquipes(equipeId1, equipeId2);
+    }
+
 
 }

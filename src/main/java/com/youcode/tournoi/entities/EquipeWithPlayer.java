@@ -22,4 +22,8 @@ public class EquipeWithPlayer {
     @JoinColumn(name = "playerId")
     private Player player;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "tournoiId")
+    private Tournoi tournoi;
+
 }

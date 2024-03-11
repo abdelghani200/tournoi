@@ -1,7 +1,5 @@
 package com.youcode.tournoi.dtos.equipe;
 
-import com.youcode.tournoi.entities.Equipe;
-import com.youcode.tournoi.entities.Player;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,6 +9,7 @@ public class EquipeWithPlayerDtoRes {
 
     private Long id;
     private Long idEquipe;
+    private Long idTournoi;
     private Long idUser;
 
 }
