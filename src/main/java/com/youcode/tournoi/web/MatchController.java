@@ -1,5 +1,6 @@
 package com.youcode.tournoi.web;
 
+import com.youcode.tournoi.dtos.match.MatchDetailsDto;
 import com.youcode.tournoi.dtos.match.MatchDto;
 import com.youcode.tournoi.dtos.match.MatchDtoRes;
 import com.youcode.tournoi.services.interfaces.MatchService;
@@ -39,5 +40,18 @@ public class MatchController {
         }
         return new ResponseEntity<>(matches, HttpStatus.OK);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteMatch(@PathVariable Long id) {
+        matchService.delete(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<MatchDto> updateMatch(@PathVariable Long id, @RequestBody MatchDto matchDto) {
+        MatchDto updatedMatch = matchService.update(id, matchDto);
+        return new ResponseEntity<>(updatedMatch, HttpStatus.OK);
+    }
+
 
 }
