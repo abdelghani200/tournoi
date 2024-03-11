@@ -12,13 +12,14 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "users")
 @Inheritance(strategy = InheritanceType.JOINED)
-public class User {
+public abstract class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Long idUser;
     protected String nomUser;
     protected String prenomUser;
     protected String email;
+    protected String password;
     @Enumerated(EnumType.STRING)
     protected UserRole role;
 }

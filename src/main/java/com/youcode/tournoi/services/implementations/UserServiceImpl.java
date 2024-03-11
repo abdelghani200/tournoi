@@ -1,18 +1,22 @@
 package com.youcode.tournoi.services.implementations;
 
+import com.youcode.tournoi.dtos.auth.UserDto;
 import com.youcode.tournoi.dtos.player.PlayerDtoRes;
 import com.youcode.tournoi.dtos.user.AdminDto;
 import com.youcode.tournoi.dtos.player.PlayerDto;
 import com.youcode.tournoi.entities.Admin;
+import com.youcode.tournoi.entities.Match;
 import com.youcode.tournoi.entities.Player;
 import com.youcode.tournoi.exceptions.PlayerNotFoundException;
 import com.youcode.tournoi.persistence.AdminRepository;
+import com.youcode.tournoi.persistence.MatchRepository;
 import com.youcode.tournoi.persistence.PlayerRepository;
 import com.youcode.tournoi.services.interfaces.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,12 +26,14 @@ public class UserServiceImpl implements UserService {
 
     private final AdminRepository adminRepository;
     private final PlayerRepository playerRepository;
+    private final MatchRepository matchRepository;
     private final ModelMapper modelMapper;
 
     @Autowired
-    public UserServiceImpl(AdminRepository adminRepository, PlayerRepository playerRepository, ModelMapper modelMapper){
+    public UserServiceImpl(AdminRepository adminRepository, PlayerRepository playerRepository, MatchRepository matchRepository, ModelMapper modelMapper){
         this.adminRepository = adminRepository;
         this.playerRepository = playerRepository;
+        this.matchRepository = matchRepository;
         this.modelMapper = modelMapper;
     }
 
@@ -67,6 +73,29 @@ public class UserServiceImpl implements UserService {
         Player player = playerRepository.findById(id)
                 .orElseThrow(()->new PlayerNotFoundException("The player with ID " + id + " does not exist"));
         return modelMapper.map(player, PlayerDtoRes.class);
+    }
+
+    @Override
+    public UserDto getUserByEmail(String email) {
+        Player player = playerRepository.findByEmail(email);
+        if (player != null) {
+            UserDto userDto = new UserDto();
+            userDto.setId(player.getIdUser());
+            userDto.setEmail(player.getEmail());
+            userDto.setRole("PLAYER");
+            return userDto;
+        }
+
+        Admin admin = adminRepository.findByEmail(email);
+        if (admin != null) {
+            UserDto userDto = new UserDto();
+            userDto.setId(admin.getIdUser());
+            userDto.setEmail(admin.getEmail());
+            userDto.setRole("ADMIN");
+            return userDto;
+        }
+
+        return null;
     }
 
     @Override

@@ -9,6 +9,7 @@ public class AdminDto {
     private String nomUser;
     private String prenomUser;
     private String email;
+    private String password;
     private UserRole role;
     private String adress;
     private String phone;

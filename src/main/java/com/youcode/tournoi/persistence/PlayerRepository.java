@@ -12,4 +12,6 @@ import java.util.List;
 public interface PlayerRepository extends JpaRepository<Player, Long> {
     @Query("SELECT p FROM Player p WHERE LOWER(p.nomUser) = LOWER(:searchTerm) OR CAST(p.idUser AS string) = :searchTerm OR LOWER(p.prenomUser) = LOWER(:searchTerm)")
     List<Player> searchPlayers(@Param("searchTerm") String searchTerm);
+
+    Player findByEmail (String email);
 }
