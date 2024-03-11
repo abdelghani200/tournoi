@@ -27,6 +27,12 @@ public class Match {
     @Temporal(TemporalType.TIME)
     private LocalTime heureMatch;
 
+    @Column(name = "score_equipe1")
+    private int scoreEquipe1;
+
+    @Column(name = "score_equipe2")
+    private int scoreEquipe2;
+
     @ManyToOne
     @JoinColumn(name = "tournoi_id")
     private Tournoi tournoi;
