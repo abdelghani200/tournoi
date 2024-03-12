@@ -1,6 +1,7 @@
 package com.youcode.tournoi.web;
 
 
+import com.youcode.tournoi.dtos.statistic.StatisticSummary;
 import com.youcode.tournoi.services.StatisticService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,21 +18,9 @@ public class StatisticController {
         this.statisticService = statisticService;
     }
 
-    @GetMapping("/totalTournois")
-    public ResponseEntity<Integer> getTotalTournois() {
-        int totalTournois = statisticService.getTotalTournois();
-        return ResponseEntity.ok(totalTournois);
-    }
 
-    @GetMapping("/totalMatches")
-    public ResponseEntity<Integer> getTotalMatches() {
-        int totalMatches = statisticService.getTotalMatches();
-        return ResponseEntity.ok(totalMatches);
-    }
-
-    @GetMapping("/totalEquipes")
-    public ResponseEntity<Integer> getTotalEquipes() {
-        int totalEquipes = statisticService.getTotalEquipes();
-        return ResponseEntity.ok(totalEquipes);
+    @GetMapping("/summary")
+    public StatisticSummary getStatisticsSummary() {
+        return statisticService.getAllStatistics();
     }
 }

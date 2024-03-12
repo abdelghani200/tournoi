@@ -1,5 +1,6 @@
 package com.youcode.tournoi.services;
 
+import com.youcode.tournoi.dtos.statistic.StatisticSummary;
 import com.youcode.tournoi.services.interfaces.EquipeService;
 import com.youcode.tournoi.services.interfaces.MatchService;
 import com.youcode.tournoi.services.interfaces.TournoiService;
@@ -30,5 +31,15 @@ public class StatisticService {
     public int getTotalEquipes() {
         return equipeService.getAll().size();
     }
+
+
+    public StatisticSummary getAllStatistics(){
+        int totalTournois = tournoiService.getAll().size();
+        int totalMatches = matchService.getAll().size();
+        int totalEquipes = equipeService.getAll().size();
+
+        return new StatisticSummary(totalTournois, totalMatches, totalEquipes);
+    }
+
 
 }
