@@ -39,6 +39,11 @@ public class UserController {
         return userService.getAllPlayers();
     }
 
+    @GetMapping("admins")
+    public List<AdminDto> getAllAdmins(){
+        return userService.getAllAdmins();
+    }
+
     @GetMapping("/search")
     public PlayerDtoRes searchPlayers(@RequestParam String searchTerm){
         return userService.searchPlayers(searchTerm);
