@@ -5,19 +5,16 @@ import com.youcode.tournoi.dtos.player.PlayerDtoRes;
 import com.youcode.tournoi.dtos.user.AdminDto;
 import com.youcode.tournoi.dtos.player.PlayerDto;
 import com.youcode.tournoi.entities.Admin;
-import com.youcode.tournoi.entities.Match;
 import com.youcode.tournoi.entities.Player;
 import com.youcode.tournoi.exceptions.PlayerNotFoundException;
 import com.youcode.tournoi.persistence.AdminRepository;
-import com.youcode.tournoi.persistence.MatchRepository;
 import com.youcode.tournoi.persistence.PlayerRepository;
 import com.youcode.tournoi.services.interfaces.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,15 +23,15 @@ public class UserServiceImpl implements UserService {
 
     private final AdminRepository adminRepository;
     private final PlayerRepository playerRepository;
-    private final MatchRepository matchRepository;
     private final ModelMapper modelMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImpl(AdminRepository adminRepository, PlayerRepository playerRepository, MatchRepository matchRepository, ModelMapper modelMapper){
+    public UserServiceImpl(AdminRepository adminRepository, PlayerRepository playerRepository, ModelMapper modelMapper, PasswordEncoder passwordEncoder){
         this.adminRepository = adminRepository;
         this.playerRepository = playerRepository;
-        this.matchRepository = matchRepository;
         this.modelMapper = modelMapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
 
@@ -47,6 +44,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public PlayerDto createPlayer(PlayerDto playerDto) {
+        playerDto.setPassword(passwordEncoder.encode(playerDto.getPassword()));
         Player playerEntity = modelMapper.map(playerDto, Player.class);
         Player savedplayer = playerRepository.save(playerEntity);
         return modelMapper.map(savedplayer, PlayerDto.class);
