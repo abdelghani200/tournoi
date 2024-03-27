@@ -2,8 +2,6 @@ package com.youcode.tournoi.services.interfaces;
 
 import com.youcode.tournoi.dtos.equipe.EquipeWithPlayerDtoReq;
 import com.youcode.tournoi.dtos.equipe.EquipeWithPlayerDtoRes;
-import com.youcode.tournoi.dtos.player.PlayerDtoRes;
-import com.youcode.tournoi.entities.EquipeWithPlayer;
 import com.youcode.tournoi.exceptions.EquipeNotFoundException;
 
 import java.util.List;

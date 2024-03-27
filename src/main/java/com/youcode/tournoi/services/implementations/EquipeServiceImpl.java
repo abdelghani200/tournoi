@@ -1,14 +1,13 @@
 package com.youcode.tournoi.services.implementations;
 
 import com.youcode.tournoi.dtos.equipe.EquipeDtoRes;
-import com.youcode.tournoi.dtos.equipe.EquipeStatDto;
-import com.youcode.tournoi.entities.Equipe;
-import com.youcode.tournoi.entities.Match;
+import com.youcode.tournoi.dtos.equipe.EquipeWithPlayerDtoReq;
+import com.youcode.tournoi.entities.*;
 import com.youcode.tournoi.exceptions.EquipeNotFoundException;
-import com.youcode.tournoi.persistence.EquipeRepository;
-import com.youcode.tournoi.persistence.MatchRepository;
-import com.youcode.tournoi.persistence.PlayerRepository;
+import com.youcode.tournoi.exceptions.PlayerNotFoundException;
+import com.youcode.tournoi.persistence.*;
 import com.youcode.tournoi.services.interfaces.EquipeService;
+import com.youcode.tournoi.services.interfaces.EquipeWithPlayerService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,14 +21,17 @@ import java.util.stream.Collectors;
 public class EquipeServiceImpl implements EquipeService {
 
     private final EquipeRepository equipeRepository;
-    private final MatchRepository matchRepository;
+    private final MatchFifaRepository matchFifaRepository;
+    private final MatchFBRepository matchFBRepository;
     private final ModelMapper modelMapper;
+    private final EquipeWithPlayerRepository equipeWithPlayerRepository;
 
-    @Autowired
-    public EquipeServiceImpl(EquipeRepository equipeRepository, MatchRepository matchRepository, ModelMapper modelMapper){
+    public EquipeServiceImpl(EquipeRepository equipeRepository, MatchFifaRepository matchFifaRepository, MatchFBRepository matchFBRepository, ModelMapper modelMapper, EquipeWithPlayerRepository equipeWithPlayerRepository){
         this.equipeRepository = equipeRepository;
-        this.matchRepository = matchRepository;
+        this.matchFifaRepository = matchFifaRepository;
+        this.matchFBRepository = matchFBRepository;
         this.modelMapper = modelMapper;
+        this.equipeWithPlayerRepository = equipeWithPlayerRepository;
     }
 
     @Override
@@ -45,7 +47,6 @@ public class EquipeServiceImpl implements EquipeService {
         return equipeList.stream()
                 .map(equipe -> modelMapper.map(equipe, EquipeDtoRes.class))
                 .collect(Collectors.toList());
-
     }
 
     @Override
@@ -78,11 +79,19 @@ public class EquipeServiceImpl implements EquipeService {
     }
 
     @Override
-    public EquipeStatDto findByIdWithMatchStats(Long id) {
-        Equipe equipe = equipeRepository.findById(id)
+    public EquipeWithPlayerDtoReq findByIdWithMatchStats(Long id) {
+        TeamMembership equipeWithPlayer = equipeWithPlayerRepository.findById(id)
                 .orElseThrow(() -> new EquipeNotFoundException("The equipe with ID " + id + " does not exist"));
 
-        List<Match> matchs = matchRepository.findByEquipe1OrEquipe2(equipe, equipe);
+        Equipe equipe = equipeWithPlayer.getEquipe();
+        Player player = equipeWithPlayer.getPlayer();
+
+        List<MatchFifa> matchsFifa = matchFifaRepository.findByPlayer1OrPlayer2(player, player);
+        List<MatchFB> matchsFB = matchFBRepository.findByEquipe1OrEquipe2(equipe, equipe);
+
+        List<Match> matchs = new ArrayList<>();
+        matchs.addAll(matchsFifa);
+        matchs.addAll(matchsFB);
 
         int nbMatchsJoues = matchs.size();
         int points = 0;
@@ -90,28 +99,50 @@ public class EquipeServiceImpl implements EquipeService {
         int nbMatchsPerdus = 0;
 
         for (Match match : matchs) {
-            if (match.getEquipe1().equals(equipe)) {
-                if (match.getScoreEquipe1() > match.getScoreEquipe2()) {
-                    points += 3;
-                    nbMatchsGagnes++;
-                } else if (match.getScoreEquipe1() < match.getScoreEquipe2()) {
-                    nbMatchsPerdus++;
-                } else {
-                    points += 1;
+            if (match instanceof MatchFB matchFB) {
+                if (matchFB.getEquipe1().equals(equipe)) {
+                    if (matchFB.getScoreEquipe1() > matchFB.getScoreEquipe2()) {
+                        points += 3;
+                        nbMatchsGagnes++;
+                    } else if (matchFB.getScoreEquipe1() < matchFB.getScoreEquipe2()) {
+                        nbMatchsPerdus++;
+                    } else {
+                        points += 1;
+                    }
+                } else if (matchFB.getEquipe2().equals(equipe)) {
+                    if (matchFB.getScoreEquipe2() > matchFB.getScoreEquipe1()) {
+                        points += 3;
+                        nbMatchsGagnes++;
+                    } else if (matchFB.getScoreEquipe2() < matchFB.getScoreEquipe1()) {
+                        nbMatchsPerdus++;
+                    } else {
+                        points += 1;
+                    }
                 }
-            } else if (match.getEquipe2().equals(equipe)) {
-                if (match.getScoreEquipe2() > match.getScoreEquipe1()) {
-                    points += 3;
-                    nbMatchsGagnes++;
-                } else if (match.getScoreEquipe2() < match.getScoreEquipe1()) {
-                    nbMatchsPerdus++;
-                } else {
-                    points += 1;
+            } else if (match instanceof MatchFifa matchFifa) {
+                if (matchFifa.getPlayer1().equals(player)) {
+                    if (matchFifa.getScoreEquipe1() > matchFifa.getScoreEquipe2()) {
+                        points += 3;
+                        nbMatchsGagnes++;
+                    } else if (matchFifa.getScoreEquipe1() < matchFifa.getScoreEquipe2()) {
+                        nbMatchsPerdus++;
+                    } else {
+                        points += 1;
+                    }
+                } else if (matchFifa.getPlayer2().equals(player)) {
+                    if (matchFifa.getScoreEquipe2() > matchFifa.getScoreEquipe1()) {
+                        points += 3;
+                        nbMatchsGagnes++;
+                    } else if (matchFifa.getScoreEquipe2() < matchFifa.getScoreEquipe1()) {
+                        nbMatchsPerdus++;
+                    } else {
+                        points += 1;
+                    }
                 }
             }
         }
 
-        EquipeStatDto equipeDtoRes = modelMapper.map(equipe, EquipeStatDto.class);
+        EquipeWithPlayerDtoReq equipeDtoRes = modelMapper.map(equipeWithPlayer, EquipeWithPlayerDtoReq.class);
         equipeDtoRes.setNbMatchsJoues(nbMatchsJoues);
         equipeDtoRes.setPoints(points);
         equipeDtoRes.setNbMatchsGagnes(nbMatchsGagnes);
@@ -122,12 +153,12 @@ public class EquipeServiceImpl implements EquipeService {
 
 
     @Override
-    public List<EquipeStatDto> findAllWithMatchStats() {
-        List<Equipe> equipes = equipeRepository.findAll();
-        List<EquipeStatDto> equipesWithStats = new ArrayList<>();
+    public List<EquipeWithPlayerDtoReq> findAllWithMatchStats() {
+        List<TeamMembership> teamMemberships = equipeWithPlayerRepository.findAll();
+        List<EquipeWithPlayerDtoReq> equipesWithStats = new ArrayList<>();
 
-        for (Equipe equipe : equipes) {
-            EquipeStatDto equipeWithStats = findByIdWithMatchStats(equipe.getIdEquipe());
+        for (TeamMembership teamMembership : teamMemberships) {
+            EquipeWithPlayerDtoReq equipeWithStats = findByIdWithMatchStats(teamMembership.getId());
             equipesWithStats.add(equipeWithStats);
         }
 

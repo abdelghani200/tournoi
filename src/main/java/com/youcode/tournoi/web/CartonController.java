@@ -1,6 +1,7 @@
 package com.youcode.tournoi.web;
 
 import com.youcode.tournoi.dtos.carton.CartonDtoReq;
+import com.youcode.tournoi.dtos.carton.CartonDtoRes;
 import com.youcode.tournoi.services.interfaces.CartonService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +20,8 @@ public class CartonController {
     }
 
     @PostMapping
-    public ResponseEntity<CartonDtoReq> createEquipe(@RequestBody CartonDtoReq cartonDtoReq){
-        CartonDtoReq createdCarton = cartonService.save(cartonDtoReq);
+    public ResponseEntity<CartonDtoRes> createEquipe(@RequestBody CartonDtoRes cartonDtoReq){
+        CartonDtoRes createdCarton = cartonService.save(cartonDtoReq);
         return  new ResponseEntity<>(createdCarton, HttpStatus.CREATED);
     }
 }

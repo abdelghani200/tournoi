@@ -14,6 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "matches")
+@Inheritance(strategy = InheritanceType.JOINED)
 public class Match {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,11 +44,5 @@ public class Match {
     @OneToMany(mappedBy = "match", cascade = CascadeType.ALL)
     private List<Like> likes;
 
-    @ManyToOne
-    @JoinColumn(name = "equipe1_id")
-    private Equipe equipe1;
 
-    @ManyToOne
-    @JoinColumn(name = "equipe2_id")
-    private Equipe equipe2;
 }

@@ -30,7 +30,6 @@ public class TournoiFifaServiceImpl implements TournoiFifaService {
         Player player = playerRepository.findById(fifaDto.getPlayerId())
                 .orElseThrow(() -> new PlayerNotFoundException("Joueur non trouvé avec l'ID : " + fifaDto.getPlayerId()));
 
-        tournoi.getPlayers().add(player);
         tournoiRepository.save(tournoi);
 
         return fifaDto;

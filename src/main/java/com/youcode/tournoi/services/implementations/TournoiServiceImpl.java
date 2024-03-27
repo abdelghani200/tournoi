@@ -1,11 +1,9 @@
 package com.youcode.tournoi.services.implementations;
 
-import com.youcode.tournoi.dtos.equipe.EquipeWithPlayerDtoRes;
 import com.youcode.tournoi.dtos.player.EquipeToTournoi;
 import com.youcode.tournoi.dtos.tournoi.TournoiDto;
 import com.youcode.tournoi.dtos.tournoi.TournoiDtoRes;
 import com.youcode.tournoi.entities.Equipe;
-import com.youcode.tournoi.entities.EquipeWithPlayer;
 import com.youcode.tournoi.entities.Tournoi;
 import com.youcode.tournoi.exceptions.TournoiNotFoundException;
 import com.youcode.tournoi.persistence.EquipeRepository;
@@ -59,9 +57,9 @@ public class TournoiServiceImpl implements TournoiService {
 
 
 
-            List<Equipe> equipes = tournoi.getEquipes();
-            equipes.add(equipe);
-            tournoi.setEquipes(equipes);
+//            List<Equipe> equipes = tournoi.getEquipes();
+//            equipes.add(equipe);
+//            tournoi.setEquipes(equipes);
 
             tournoiRepository.save(tournoi);
 

@@ -8,6 +8,7 @@ import com.youcode.tournoi.services.interfaces.TournoiFifaService;
 import com.youcode.tournoi.services.interfaces.TournoiService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,6 +25,7 @@ public class FifaController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('Admin')")
     public ResponseEntity<FifaDto> createAdmin(@RequestBody FifaDto fifaDto) {
         FifaDto createdfifa = tournoiFifaService.playerToFifa(fifaDto);
         return new ResponseEntity<>(createdfifa, HttpStatus.CREATED);

@@ -33,24 +33,27 @@ public class Tournoi {
     @OneToMany(mappedBy = "tournoi", cascade = CascadeType.ALL)
     private List<Match> matches;
 
-    @OneToMany(mappedBy = "tournoi", cascade = CascadeType.ALL)
-    private List<EquipeWithPlayer> equipeWithPlayers;
+//    @OneToMany(mappedBy = "tournoi", cascade = CascadeType.ALL)
+//    private List<TeamMembership> equipeWithPlayers;
 
-    @ManyToMany
-    @JoinTable(
-            name = "players_fifa",
-            joinColumns = @JoinColumn(name = "tournoi_id"),
-            inverseJoinColumns = @JoinColumn(name = "player_id")
-    )
-    private List<Player> players;
+    @OneToMany(mappedBy = "tournoi")
+    private List<TeamMembership> teamMemberships;
 
-    @ManyToMany
-    @JoinTable(
-            name = "equipes_tournois",
-            joinColumns = @JoinColumn(name = "tournoi_id"),
-            inverseJoinColumns = @JoinColumn(name = "equipe_id")
-    )
-    private List<Equipe> equipes;
+//    @ManyToMany
+//    @JoinTable(
+//            name = "players_fifa",
+//            joinColumns = @JoinColumn(name = "tournoi_id"),
+//            inverseJoinColumns = @JoinColumn(name = "player_id")
+//    )
+//    private List<Player> players;
+//
+//    @ManyToMany
+//    @JoinTable(
+//            name = "equipes_tournois",
+//            joinColumns = @JoinColumn(name = "tournoi_id"),
+//            inverseJoinColumns = @JoinColumn(name = "equipe_id")
+//    )
+//    private List<Equipe> equipes;
 
     @ManyToOne
     @JoinColumn(name = "admin_id")

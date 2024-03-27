@@ -4,11 +4,13 @@ import com.youcode.tournoi.dtos.auth.AuthResponse;
 import com.youcode.tournoi.dtos.auth.LoginRequest;
 import com.youcode.tournoi.dtos.auth.UserDto;
 import com.youcode.tournoi.dtos.player.PlayerDto;
+import com.youcode.tournoi.entities.Player;
 import com.youcode.tournoi.entities.User;
 import com.youcode.tournoi.services.interfaces.UserService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -36,7 +38,10 @@ public class AuthService {
                 )
         );
 
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+
         UserDto user = userService.getUserByEmail(loginRequest.getEmail());
         String role = userDetails.getAuthorities().iterator().next().getAuthority();
 
@@ -51,4 +56,19 @@ public class AuthService {
         return userService.createPlayer(playerDto);
     }
 
+    public Player getAuthenticatedPlayer() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return null;
+        }
+
+        Object principal = authentication.getPrincipal();
+        if (principal instanceof Player) {
+            return (Player) principal;
+        }
+
+        return null;
+    }
 }
+
+

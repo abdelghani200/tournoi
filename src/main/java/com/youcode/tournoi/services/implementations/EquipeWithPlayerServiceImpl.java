@@ -6,11 +6,9 @@ import com.youcode.tournoi.dtos.equipe.EquipeWithPlayerDtoRes;
 import com.youcode.tournoi.dtos.player.PlayerDto;
 import com.youcode.tournoi.dtos.player.PlayerDtoRes;
 import com.youcode.tournoi.entities.Equipe;
-import com.youcode.tournoi.entities.EquipeWithPlayer;
+import com.youcode.tournoi.entities.TeamMembership;
 import com.youcode.tournoi.entities.Player;
-import com.youcode.tournoi.exceptions.EquipeNotFoundException;
 import com.youcode.tournoi.exceptions.PlayerAlreadyInTeamException;
-import com.youcode.tournoi.persistence.EquipeRepository;
 import com.youcode.tournoi.persistence.EquipeWithPlayerRepository;
 import com.youcode.tournoi.services.interfaces.EquipeService;
 import com.youcode.tournoi.services.interfaces.EquipeWithPlayerService;
@@ -20,7 +18,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class EquipeWithPlayerServiceImpl implements EquipeWithPlayerService {
@@ -40,15 +37,22 @@ public class EquipeWithPlayerServiceImpl implements EquipeWithPlayerService {
 
     @Override
     public EquipeWithPlayerDtoRes savePlayerToEquipe(EquipeWithPlayerDtoRes withPlayer) {
+        Long equipeId = withPlayer.getIdEquipe();
+        Long playerId = withPlayer.getIdUser();
+        Long tournamentId = withPlayer.getIdTournoi();
 
-        if (isPlayerAlreadyInTeamForTournament(withPlayer.getIdEquipe(), withPlayer.getIdTournoi())) {
+        if (isPlayerAlreadyInTeamForTournament(equipeId, playerId, tournamentId)) {
+            throw new PlayerAlreadyInTeamException("Le joueur est déjà inscrit dans cette équipe pour ce tournoi.");
+        }
+
+        if (isPlayerAlreadyInTeamForTournament(playerId, tournamentId)) {
             throw new PlayerAlreadyInTeamException("Le joueur est déjà inscrit dans une autre équipe de ce tournoi.");
         }
 
-        EquipeWithPlayer equipeWithPlayer = modelMapper.map(withPlayer, EquipeWithPlayer.class);
+        TeamMembership equipeWithPlayer = modelMapper.map(withPlayer, TeamMembership.class);
 
-        EquipeDtoRes equipe = equipeService.findById(withPlayer.getIdEquipe());
-        PlayerDtoRes player = userService.findById(withPlayer.getIdUser());
+        EquipeDtoRes equipe = equipeService.findById(equipeId);
+        PlayerDtoRes player = userService.findById(playerId);
 
         equipeWithPlayer.setEquipe(modelMapper.map(equipe, Equipe.class));
         equipeWithPlayer.setPlayer(modelMapper.map(player, Player.class));
@@ -58,13 +62,18 @@ public class EquipeWithPlayerServiceImpl implements EquipeWithPlayerService {
         return modelMapper.map(equipeWithPlayer, EquipeWithPlayerDtoRes.class);
     }
 
+    private boolean isPlayerAlreadyInTeamForTournament(Long equipeId, Long playerId, Long tournamentId) {
+        return equipeWithPlayerRepository.existsByEquipeIdEquipeAndPlayerIdUserAndTournoiId(equipeId, playerId, tournamentId);
+    }
+
+
     @Override
     public List<EquipeWithPlayerDtoReq> getPlayersByEquipe(Long equipeId) {
-        List<EquipeWithPlayer> equipeWithPlayers = equipeWithPlayerRepository.findByEquipeIdEquipe(equipeId);
+        List<TeamMembership> equipeWithPlayers = equipeWithPlayerRepository.findByEquipeIdEquipe(equipeId);
 
         List<EquipeWithPlayerDtoReq> playersDtoRes = new ArrayList<>();
 
-        for (EquipeWithPlayer equipeWithPlayer : equipeWithPlayers) {
+        for (TeamMembership equipeWithPlayer : equipeWithPlayers) {
             EquipeDtoRes equipeDtoRes = modelMapper.map(equipeWithPlayer.getEquipe(), EquipeDtoRes.class);
             PlayerDto playerDto = modelMapper.map(equipeWithPlayer.getPlayer(), PlayerDto.class);
 
@@ -94,7 +103,7 @@ public class EquipeWithPlayerServiceImpl implements EquipeWithPlayerService {
 
 
     public boolean isPlayerAlreadyInTeamForTournament(Long playerId, Long tournamentId) {
-        List<EquipeWithPlayer> equipeWithPlayers = equipeWithPlayerRepository.findByPlayerIdAndTournoiId(playerId, tournamentId);
+        List<TeamMembership> equipeWithPlayers = equipeWithPlayerRepository.findByPlayerIdAndTournoiId(playerId, tournamentId);
         return !equipeWithPlayers.isEmpty();
     }
 

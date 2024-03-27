@@ -2,7 +2,13 @@ package com.youcode.tournoi.entities;
 
 import com.youcode.tournoi.enums.TypeCarton;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "cartons")
 public class Carton {
@@ -15,8 +21,8 @@ public class Carton {
     private Match match;
 
     @ManyToOne
-    @JoinColumn(name = "joueur_id")
-    private Player joueur;
+    @JoinColumn(name = "player_id")
+    private Player player;
 
     @Enumerated(EnumType.STRING)
     private TypeCarton type;

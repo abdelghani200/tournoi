@@ -1,15 +1,18 @@
 package com.youcode.tournoi.dtos.match;
 
 import com.youcode.tournoi.dtos.equipe.EquipeDtoRes;
+import com.youcode.tournoi.dtos.player.PlayerDto;
+import com.youcode.tournoi.dtos.player.PlayerDtoRes;
 import com.youcode.tournoi.dtos.tournoi.TournoiDtoRes;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalTime;
 import java.util.Date;
 
 @Data
-public class MatchDtoRes {
-
+@NoArgsConstructor
+public class MatchFbDtoRes {
     private Long idMatch;
     private Date dateMatch;
     private LocalTime heureMatch;
@@ -18,5 +21,6 @@ public class MatchDtoRes {
     private TournoiDtoRes tournoi;
     private EquipeDtoRes equipe1;
     private EquipeDtoRes equipe2;
-
+    private PlayerDtoRes player1;
+    private PlayerDtoRes player2;
 }

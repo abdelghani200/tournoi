@@ -6,6 +6,7 @@ import com.youcode.tournoi.dtos.player.PlayerDtoRes;
 import com.youcode.tournoi.services.interfaces.EquipeWithPlayerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,6 +22,7 @@ public class EquipeWithPlayerController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('Admin')")
     public ResponseEntity<EquipeWithPlayerDtoRes> savePlayerToEquipe(@RequestBody EquipeWithPlayerDtoRes withPlayer){
         EquipeWithPlayerDtoRes equipeWithPlayer = withPlayerService.savePlayerToEquipe(withPlayer);
         return  new ResponseEntity<>(equipeWithPlayer, HttpStatus.CREATED);

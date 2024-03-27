@@ -8,6 +8,7 @@ import com.youcode.tournoi.services.interfaces.TournoiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,11 +25,13 @@ public class TournoiController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('Admin')")
     public ResponseEntity<TournoiDto> createAdmin(@RequestBody TournoiDto tournoiDto) {
         TournoiDto createdTournoi = tournoiService.save(tournoiDto);
         return new ResponseEntity<>(createdTournoi, HttpStatus.CREATED);
     }
     @GetMapping
+    @PreAuthorize("hasRole('Admin') or hasRole('Player')")
     public List<TournoiDtoRes> getAllTournois(){
         return tournoiService.getAll();
     }

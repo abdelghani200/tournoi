@@ -9,6 +9,6 @@ public class StatisticSummary {
     private int totalTournois;
     private int totalMatches;
     private int totalEquipes;
-
+    private int totalPlayers;
 
 }

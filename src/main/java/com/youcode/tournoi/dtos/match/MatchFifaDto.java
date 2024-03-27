@@ -6,12 +6,11 @@ import java.time.LocalTime;
 import java.util.Date;
 
 @Data
-public class MatchDto {
+public class MatchFifaDto {
     private Long idMatch;
     private Date dateMatch;
     private LocalTime heureMatch;
     private Long tournoiId;
-    private Long equipe1Id;
-    private Long equipe2Id;
-
+    private Long player1Id;
+    private Long player2Id;
 }

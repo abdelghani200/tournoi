@@ -21,9 +21,10 @@ public class Equipe {
     @Enumerated(EnumType.STRING)
     private TypeEquipe type;
 
-    @ManyToMany(mappedBy = "equipes")
-    private List<Tournoi> tournois;
+    @OneToMany(mappedBy = "equipe")
+    private List<TeamMembership> teamMemberships;
 
-//    @OneToMany(mappedBy = "equipe")
-//    private List<Player> players;
+//    @ManyToMany(mappedBy = "equipes")
+//    private List<Tournoi> tournois;
+
 }

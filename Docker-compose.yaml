@@ -1,0 +1,21 @@
+version: '3'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "9090:9090"
+    depends_on:
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/tournoi
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=youcode2023
+
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: QuizTime
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: youcode2023

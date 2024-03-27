@@ -1,15 +1,18 @@
 package com.youcode.tournoi.services.interfaces;
 
-import com.youcode.tournoi.dtos.match.MatchDto;
-import com.youcode.tournoi.dtos.match.MatchDtoRes;
+import com.youcode.tournoi.dtos.match.*;
 
 import java.util.List;
 
 public interface MatchService {
-    MatchDto save(MatchDto matchDto);
-    List<MatchDtoRes> getAll();
-    MatchDtoRes findById(Long id);
-    List<MatchDtoRes> getMatchesByTournoiId(Long tournoiId);
+    MatchFbDto save(MatchFbDto matchFbDto);
+    MatchFifaDto save(MatchFifaDto matchFifaDto);
+    List<MatchFbDtoRes> getAll();
+    List<MatchFifaDtoRes> getAllFifa();
+    MatchFbDtoRes findById(Long id);
     void delete(Long id);
-    MatchDto update(Long id, MatchDto matchDto);
+    MatchFbDto update(Long id, MatchFbDto matchDto);
+    List<MatchFbDtoRes> getMatchesFbByTournoiId(Long tournoiId);
+    List<MatchFifaDtoRes> getMatchesFifaByTournoi(Long tournoiId);
+    List<MatchDtoRes> getMatchesByTournoiId(Long tournoiId);
 }
