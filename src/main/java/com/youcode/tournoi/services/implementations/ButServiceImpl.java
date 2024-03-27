@@ -3,12 +3,13 @@ package com.youcode.tournoi.services.implementations;
 import com.youcode.tournoi.dtos.but.ButDtoReq;
 import com.youcode.tournoi.dtos.but.ButDtoRes;
 import com.youcode.tournoi.dtos.equipe.EquipeDtoRes;
-import com.youcode.tournoi.dtos.match.MatchDtoRes;
+import com.youcode.tournoi.dtos.match.MatchFbDto;
+import com.youcode.tournoi.dtos.match.MatchFbDtoRes;
+import com.youcode.tournoi.dtos.match.MatchFifaDto;
+import com.youcode.tournoi.dtos.player.PlayerDto;
 import com.youcode.tournoi.dtos.player.PlayerDtoRes;
-import com.youcode.tournoi.entities.Gool;
-import com.youcode.tournoi.entities.Equipe;
-import com.youcode.tournoi.entities.Match;
-import com.youcode.tournoi.entities.Player;
+import com.youcode.tournoi.entities.*;
+import com.youcode.tournoi.enums.TypeTournoi;
 import com.youcode.tournoi.exceptions.GoolNotFoundException;
 import com.youcode.tournoi.persistence.ButRepository;
 import com.youcode.tournoi.services.interfaces.ButService;
@@ -19,7 +20,10 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -46,7 +50,7 @@ public class ButServiceImpl implements ButService {
 
         EquipeDtoRes equipe = equipeService.findById(butDtoReq.getEquipeId());
         PlayerDtoRes player = playerService.findById(butDtoReq.getPlayerId());
-        MatchDtoRes match = matchService.findById(butDtoReq.getMatchId());
+        MatchFbDtoRes match = matchService.findById(butDtoReq.getMatchId());
 
         but.setEquipe(modelMapper.map(equipe, Equipe.class));
         but.setPlayer(modelMapper.map(player, Player.class));
@@ -54,8 +58,23 @@ public class ButServiceImpl implements ButService {
 
         but = butRepository.save(but);
 
+        Match matchEntity = modelMapper.map(match, Match.class);
+        Equipe equipeEntity = modelMapper.map(equipe, Equipe.class);
+
+        if (matchEntity.getTournoi().getType() != TypeTournoi.Fifa) {
+            MatchFB matchFB = modelMapper.map(match, MatchFB.class);
+            if (matchFB.getEquipe1() != null && matchFB.getEquipe1().getIdEquipe().equals(equipeEntity.getIdEquipe())) {
+                matchFB.setScoreEquipe1(matchFB.getScoreEquipe1() + 1);
+            } else if (matchFB.getEquipe2() != null && matchFB.getEquipe2().getIdEquipe().equals(equipeEntity.getIdEquipe())) {
+                matchFB.setScoreEquipe2(matchFB.getScoreEquipe2() + 1);
+            }
+            matchService.update(matchFB.getIdMatch(), modelMapper.map(matchFB, MatchFbDto.class));
+        }
+
         return modelMapper.map(but, ButDtoReq.class);
     }
+
+
 
     @Override
     public List<ButDtoRes> getAll() {
@@ -99,5 +118,26 @@ public class ButServiceImpl implements ButService {
                 .map(but -> modelMapper.map(but, ButDtoRes.class))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<ButDtoRes> getGoalsByPlayerOrdered() {
+        List<Object[]> results = butRepository.findGoalsByPlayerOrdered();
+        List<ButDtoRes> goalsByPlayer = new ArrayList<>();
+
+        for (Object[] result : results) {
+            String playerName = (String) result[0];
+            Integer goals = ((Number) result[1]).intValue();
+
+            ButDtoRes butDtoRes = new ButDtoRes();
+            butDtoRes.setPlayer(new PlayerDto(playerName));
+            butDtoRes.setNumberOfGoal(goals);
+
+            goalsByPlayer.add(butDtoRes);
+        }
+
+        return goalsByPlayer;
+    }
+
+
 
 }

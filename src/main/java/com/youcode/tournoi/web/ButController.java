@@ -7,6 +7,7 @@ import com.youcode.tournoi.exceptions.GoolNotFoundException;
 import com.youcode.tournoi.services.interfaces.ButService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,17 +24,20 @@ public class ButController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('Admin')")
     public ResponseEntity<ButDtoReq> createEquipe(@RequestBody ButDtoReq butDtoReq){
         ButDtoReq createdBut = butService.saveBut(butDtoReq);
         return  new ResponseEntity<>(createdBut, HttpStatus.CREATED);
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('Admin')")
     public List<ButDtoRes> getAllGools(){
         return butService.getAll();
     }
 
     @PutMapping("/{idBut}/IncrementGoals")
+    @PreAuthorize("hasRole('Admin')")
     public ResponseEntity<Void> IncrementNumberOfGoals(@PathVariable Long idBut, @RequestBody Map<String, Integer> requestBody) {
         Integer newNumberOfGoals = requestBody.get("newNumberOfGoals");
         butService.incrementNumberOfGoals(idBut, newNumberOfGoals);
@@ -42,6 +46,7 @@ public class ButController {
 
 
     @PutMapping("/{idBut}/DecrementGoals")
+    @PreAuthorize("hasRole('Admin')")
     public ResponseEntity<Void> DecrementNumberOfGoals(@PathVariable Long idBut, @RequestBody Map<String, Integer> requestBody) {
         Integer newNumberOfGoals = requestBody.get("newNumberOfGoals");
         butService.decrementNumberOfGoals(idBut, newNumberOfGoals);
@@ -54,5 +59,13 @@ public class ButController {
                                       @RequestParam(required = false) String tournoiName) {
         return butService.searchByAllAttributes(playerName, equipeName, tournoiName);
     }
+
+    @GetMapping("/goalsByPlayerOrdered")
+    public ResponseEntity<List<ButDtoRes>> getGoalsByPlayerOrdered() {
+        List<ButDtoRes> goalsByPlayer = butService.getGoalsByPlayerOrdered();
+        return ResponseEntity.ok().body(goalsByPlayer);
+    }
+
+
 
 }
