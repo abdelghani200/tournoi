@@ -15,11 +15,14 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "admins")
 public class Admin extends User implements UserDetails {
+
     private String adress;
     private String phone;
+
     @OneToMany(mappedBy = "admin")
     private List<Tournoi> tournois;
 
