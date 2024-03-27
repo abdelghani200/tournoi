@@ -2,9 +2,7 @@ package com.youcode.tournoi.entities;
 
 import com.youcode.tournoi.enums.TypePlayer;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -12,7 +10,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -22,11 +21,8 @@ public class Player extends User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private TypePlayer type;
 
-    @ManyToMany(mappedBy = "players")
-    private List<Tournoi> tournois;
-
-//    @ManyToOne
-//    private Equipe equipe;
+    @OneToMany(mappedBy = "player")
+    private List<TeamMembership> teamMemberships;
 
     @Override
     public String getPassword() {
